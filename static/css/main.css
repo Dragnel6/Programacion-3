@@ -55,7 +55,7 @@ p {
 }
 
 .box-container .box {
-  height: 20rem;
+  height: 25rem;
   width: 17rem;
   padding: 30px;
   text-align: center;
@@ -79,7 +79,7 @@ p {
 
 .box-container .box h3 {
   font-size: 20px;
-  color: #9c27b0;
+  color: burlywood;
 
 }
 

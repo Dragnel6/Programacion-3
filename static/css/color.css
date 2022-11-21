@@ -4,3 +4,54 @@ body{
   background: linear-gradient(to right, #191654, #43C6AC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
 }
+
+
+input {
+	outline: none;
+	box-sizing: border-box;
+	height: 60px;
+	width: 0px;
+	padding: 0 20px;
+	color: #000;
+	border-radius: 50px;
+	font-size: 20px;
+	border: 1px solid #D50000;
+	transition: all .7s ease;
+}
+
+::placeholder {
+	color: grey;
+}
+
+.boton {
+	position: relative;
+	right: 0px;
+	top: 0px;
+	width: 80px;
+	height: 80px;
+	background: #D50000;
+	line-height: 80px;
+	border-radius: 50%;
+	text-align: center;
+	cursor: pointer;
+	transition: .5s;
+}
+
+.boton i {
+	font-size: 25px;
+	color: white;
+	line-height: 80px;
+	transition: all .7s ease;
+}
+
+.container:hover input {
+	width: 350px;
+}
+
+.container:hover i{
+	transform: rotate(-360deg);
+}
+
+.boton:hover{
+	background: #cc0000;
+}

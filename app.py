@@ -2,6 +2,7 @@ from flask import Flask
 from flask import render_template, request, redirect
 from flaskext.mysql import MySQL
 
+
 app=Flask(__name__)
 mysql=MySQL()
 
@@ -53,6 +54,7 @@ def admin_libro2_guardar():
     _nombre=request.form['txtNombre']
     _imagen=request.files['txtImagen']
     _archivo=request.files['txtArchivo']
+
 
     sql="INSERT INTO `modelos` (`id`, `nombre`, `imagen`, `archivos`) VALUES (NULL,%s,%s,%s);"
     datos=(_nombre,_imagen.filename,_archivo.filename)
