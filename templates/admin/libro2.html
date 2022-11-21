@@ -61,7 +61,10 @@
                      <tr class="">
                         <td>{{ modelo[0] }}</td>
                         <td>{{ modelo[1] }}</td>
-                        <td>{{ modelo[2] }}</td>
+                        <td>
+                           <img width="60" src="/img/{{ modelo[2] }}" class="img-fluid rounded-top" alt="">
+                           {{ modelo[2] }}
+                        </td>
                         <td>{{ modelo[3] }}</td>
                         <td>
                            <form action="/admin/libro2/borrar" method="post">

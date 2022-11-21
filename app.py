@@ -1,7 +1,9 @@
+import os
 from flask import Flask
 from flask import render_template, request, redirect
 from flaskext.mysql import MySQL
-
+import datetime
+from flask import send_from_directory
 
 app=Flask(__name__)
 mysql=MySQL()
@@ -16,9 +18,21 @@ mysql.init_app(app)
 def inicio():
     return render_template('sitio/index.html')
 
+@app.route('/img/<imagen>')
+def imagenes(imagen):
+    print(imagen)
+    return send_from_directory(os.path.join('templates\sitio\img'),imagen)
+
 @app.route('/libro')
 def libro():
-    return render_template('sitio/libro.html')  
+
+    conexion=mysql.connect()
+    cursor= conexion.cursor()
+    cursor.execute("SELECT * FROM `modelos`")
+    modelos=cursor.fetchall()
+    conexion.commit()
+
+    return render_template('sitio/libro.html', libro=modelos)  
 
 @app.route('/materiales')
 def materiales():
@@ -55,9 +69,19 @@ def admin_libro2_guardar():
     _imagen=request.files['txtImagen']
     _archivo=request.files['txtArchivo']
 
+    tiempo = datetime.datetime.now()
+    horaActual = tiempo.strftime('%Y%H%M%S')
+
+    if _imagen.filename!="":
+        nuevoNombre = horaActual+"_"+_imagen.filename
+        _imagen.save("templates/sitio/img/"+nuevoNombre)
+    
+    if _archivo.filename!="":
+        nuevoArchivo = horaActual+"_"+_archivo.filename
+        _archivo.save("templates/sitio/archivos!/"+nuevoArchivo)
 
     sql="INSERT INTO `modelos` (`id`, `nombre`, `imagen`, `archivos`) VALUES (NULL,%s,%s,%s);"
-    datos=(_nombre,_imagen.filename,_archivo.filename)
+    datos=(_nombre,nuevoNombre,nuevoArchivo)
 
     conexion= mysql.connect()
     cursor=conexion.cursor()
@@ -78,10 +102,23 @@ def admin_libro2_borrar():
 
     conexion=mysql.connect()
     cursor= conexion.cursor()
-    cursor.execute("SELECT * FROM `modelos` WHERE id=%s",(_id))
+    cursor.execute("SELECT imagen FROM `modelos` WHERE id=%s",(_id))
     modelo=cursor.fetchall()
     conexion.commit()
     print(modelo)
+
+    if os.path.exists("templates/sitio/img/"+str(modelo[0][0])):
+        os.unlink("templates/sitio/img/"+str(modelo[0][0]))
+
+    conexion=mysql.connect()
+    cursor= conexion.cursor()
+    cursor.execute("SELECT archivos FROM `modelos` WHERE id=%s",(_id))
+    modelo=cursor.fetchall()
+    conexion.commit()
+    print(modelo)
+
+    if os.path.exists("templates/sitio/archivos!/"+str(modelo[0][0])):
+        os.unlink("templates/sitio/archivos!/"+str(modelo[0][0]))    
 
     conexion=mysql.connect()
     cursor= conexion.cursor()
