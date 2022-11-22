@@ -46,7 +46,7 @@
          <div class="col-md-7">
 
             <div class="table-responsive">
-               <table class="table table-primary">
+               <table class="table table-bordered">
                   <thead>
                      <tr>
                         <th scope="col">ID</th>
@@ -63,12 +63,12 @@
                         <td>{{ modelo[1] }}</td>
                         <td>
                            <img width="60" src="/img/{{ modelo[2] }}" class="img-fluid rounded-top" alt="">
-                           {{ modelo[2] }}
+                           
                         </td>
                         <td>{{ modelo[3] }}</td>
                         <td>
                            <form action="/admin/libro2/borrar" method="post">
-                             <input value="{{ modelo[0] }}" type="text" name="txtID" id="txtID">
+                             <input value="{{ modelo[0] }}" type="hidden" name="txtID" id="txtID">
                               <button type="submit" class="btn btn-danger">Eliminar</button>
 
                            </form>

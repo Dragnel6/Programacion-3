@@ -1,11 +1,12 @@
 import os
 from flask import Flask
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, session
 from flaskext.mysql import MySQL
 import datetime
 from flask import send_from_directory
 
 app=Flask(__name__)
+app.secret_key="develoteca"
 mysql=MySQL()
 
 app.config['MYSQL_DATABASE_HOST']='localhost'
@@ -22,6 +23,10 @@ def inicio():
 def imagenes(imagen):
     print(imagen)
     return send_from_directory(os.path.join('templates\sitio\img'),imagen)
+
+@app.route("/css/<archivocss>")
+def css_link(archivocss):
+    return send_from_directory(os.path.join('static/css/bootstrap.css'),archivocss)
 
 @app.route('/libro')
 def libro():
@@ -45,14 +50,38 @@ def contacto():
 
 @app.route('/admin/')
 def admin_index2():
+    if not 'login' in session:
+        return redirect('/admin/login')
     return render_template('admin/index2.html') 
 
 @app.route('/admin/login')
 def admin_login():
     return render_template('admin/login.html')  
 
+@app.route('/admin/login', methods=['POST']) 
+def admin_login_post():
+    _usuario=request.form['txtUsuario']
+    _password=request.form['txtPassword']
+    print(_usuario)
+    print(_password)
+
+    if _usuario=="admin" and _password=="123":
+        session["login"]=True
+        session["usuario"]="Administrador"
+        return redirect("/admin")
+
+    return render_template('admin/login.html', mensaje='El usuario o contraseña es incorreta')   
+
+@app.route('/admin/cerrar')
+def admin_login_cerrar():
+    session.clear()
+    return redirect('/admin/login')
+
 @app.route('/admin/libro2')
 def admin_libro2():
+     
+    if not 'login' in session:
+        return redirect('/admin/login')
 
     conexion=mysql.connect()
     cursor= conexion.cursor()
@@ -65,6 +94,10 @@ def admin_libro2():
 
 @app.route('/admin/libro2/guardar', methods=['POST'])
 def admin_libro2_guardar():
+
+    if not 'login' in session:
+        return redirect('/admin/login')
+
     _nombre=request.form['txtNombre']
     _imagen=request.files['txtImagen']
     _archivo=request.files['txtArchivo']
@@ -96,6 +129,9 @@ def admin_libro2_guardar():
 
 @app.route('/admin/libro2/borrar', methods=['POST'])
 def admin_libro2_borrar():
+
+    if not 'login' in session:
+        return redirect('/admin/login')
 
     _id=request.form['txtID']
     print(_id)
