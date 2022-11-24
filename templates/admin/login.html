@@ -12,10 +12,11 @@
     integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 
 </head>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/color.css') }}">
 <body>
 
-    <div class="container">
+    
         <div class="row">
             <div class="col-md-4">
                 
@@ -30,24 +31,28 @@
                  
                  <div class="card">
                     <div class="card-header">
-                        Inicio de sesion 
+                      <h2>Inicio de seccion </h2> 
                     </div>
                     <div class="card-body">
                         <form action="/admin/login" method="post">
                           
                             <div class="mb-3">
-                              <label for="txtUsuario" class="form-label">Usuario:</label>
+                              <label for="txtUsuario" class="form-label"><h4>Usuario:</h4></label>
                               <input type="text" class="form-control" name="txtUsuario" id="txtUsuario" aria-describedby="helpid" placeholder="Escriba su usuario">
                               
                             </div>
 
                             <div class="mb-3">
-                                <label for="txtPassword" class="form-label">Contraseña:</label>
+                                <label for="txtPassword" class="form-label"><h4>Contraseña:</h4></label>
                                 <input type="password" class="form-control" name="txtPassword" id="txtPassword" aria-describedby="helpid" placeholder="Escriba su contraseña">
                                 
                             </div>
+                          
+                            <button type="submit" class="btn btn-outline-info"><h5>Entrar</h5></button>
 
-                            <button type="submit" class="btn btn-success">Entrar</button>
+                            <div>
+                              <button type="button" class="btn btn-link">As olvidado tu contraseña?</button>
+                            </div>
                              
 
                         </form>
@@ -61,7 +66,7 @@
                 
             </div>
         </div>
-    </div>
+  
   
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
     integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
