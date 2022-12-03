@@ -24,6 +24,21 @@ def imagenes(imagen):
     print(imagen)
     return send_from_directory(os.path.join('templates\sitio\img'),imagen)
 
+@app.route('/imgs/<imagen>')
+def imgs(imagen):
+    print(imagen)
+    return send_from_directory(os.path.join('imgs'),imagen)
+
+@app.route('/default/<file>')
+def default(file):
+    print(file)
+    return send_from_directory(os.path.join('defaults'),file)
+
+@app.route('/modelos/<modelo>')
+def modelos(modelo):
+    print(modelo)
+    return send_from_directory(os.path.join('templates/sitio/archivos!'),modelo)
+
 @app.route("/css/<archivocss>")
 def css_link(archivocss):
     return send_from_directory(os.path.join('static/css/bootstrap.css'),archivocss)
@@ -46,7 +61,26 @@ def materiales():
 
 @app.route('/contacto')
 def contacto():
-    return render_template('sitio/contacto.html')    
+    return render_template('sitio/contacto.html')   
+
+@app.route('/calcular')
+def calcular():
+    return render_template('sitio/calcular.html')
+
+@app.route('/calcular-<id>')
+def calcular_id(id):
+
+    sql = "SELECT * FROM `modelos` WHERE id = %s LIMIT 1"
+    id = (id)
+
+    conexion= mysql.connect()
+    cursor=conexion.cursor()
+    cursor.execute(sql,id)
+    response=cursor.fetchall()
+    conexion.commit()
+    print(response)
+
+    return render_template('sitio/calcular.html', model=response[0]);
 
 @app.route('/admin/')
 def admin_index2():
@@ -126,6 +160,38 @@ def admin_libro2_guardar():
     print(_archivo)      
 
     return redirect('/admin/libro2') 
+
+@app.route('/calcular/nuevo', methods=['POST'])
+def guardar_calculo():
+    # Deshabilitado temporalmente
+    # _archivo=request.files['txtArchivo']
+    # _relleno=request.form['relleno']
+    # _calidad=request.form['calidad']
+
+    # tiempo = datetime.datetime.now()
+    # horaActual = tiempo.strftime('%Y%H%M%S')
+
+    # if _archivo.filename!="":
+    #     nuevoArchivo = horaActual+"_"+_archivo.filename
+    #     _archivo.save("temp/calculos/"+nuevoArchivo)
+
+    # sql="INSERT INTO `calculos` (`archivo`, `relleno`, `calida`) VALUES (NULL,%s,%s,%s);"
+    # datos=(nuevoArchivo, _relleno, _calidad)
+
+    # conexion= mysql.connect()
+    # cursor=conexion.cursor()
+    # cursor.execute(sql,datos)
+    # conexion.commit()
+
+    # print(_archivo) 
+    # print(_relleno)
+    # print(_calidad)
+
+    print(request.files['txtArchivo']) 
+    print(request.form['relleno'])
+    print(request.form['calidad'])   
+
+    return redirect('/calcular')
 
 @app.route('/admin/libro2/borrar', methods=['POST'])
 def admin_libro2_borrar():

@@ -29,8 +29,8 @@
 
                      <div class="mb-3">
                         <label for="txtArchivo" class="form-label">Seleccionar Archivo:</label>
-                        <input type="file" class="form-control form-control-sm" name="txtArchivo" id="txtArchivo" aria-describedby="helpId" placeholder="Seleccione el archivo">
-                       
+                        <input type="file" class="form-control form-control-sm" name="txtArchivo" id="txtArchivo" aria-describedby="helpId" placeholder="Seleccione el archivo" onchange="mostrarModelo(this)">
+                        <model-viewer id="model" class="m-auto" alt="Seleccione un archivo .GLB" src="/default/default.glb" shadow-intensity="1" shadow-softness="0" auto-rotate camera-controls touch-action="pan-y"></model-viewer>
                      </div>
 
                      <button type="submit" class="btn btn-primary">Agregar</button>
@@ -66,7 +66,9 @@
                            <img width="60" src="/img/{{ modelo[2] }}" class="img-fluid rounded-top" alt="">
                            
                         </td>
-                        <td>{{ modelo[3] }}</td>
+                        <td>
+                           <model-viewer style="width: 100px;" class="m-auto" alt="Modelo de {{ modelo[0] }}" src="/modelos/{{ modelo[3] }}" shadow-intensity="1" shadow-softness="0" auto-rotate camera-controls touch-action="pan-y"></model-viewer>
+                        </td>
                         <td>
                            <form action="/admin/libro2/borrar" method="post">
                              <input value="{{ modelo[0] }}" type="hidden" name="txtID" id="txtID">
@@ -86,8 +88,41 @@
       </div>
    </div>
 
+   <!-- Google Model Viewer -->
+   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
    
-
+   <script>
+      const modelViewer = document.querySelector('#model'); // El visualizador inicial
+      const newModel = document.querySelector('#txtArchivo'); // El input para archivo
+      let defaultModel = false; // Si ya se selecciono un archivo
+      
+      modelViewer.addEventListener('click', (e) => { // Al dar click en el visualiador de archivos
+         if (!defaultModel) { // Si no se han seleccionado archivos antes da click en el input de archivos para ativarlo
+            newModel.click();
+         }
+      });
+      
+      function mostrarModelo(modelo) { // Al cambiar el estado del input de archivos
+         // Sí el archivo existe y tiene extencion .gbl o .gltf (Recomendado .gbl)
+         if (modelo.files[0] && (modelo.files[0].name.substring(modelo.files[0].name.lastIndexOf('.') + 1) == 'glb' || modelo.files[0].name.substring(modelo.files[0].name.lastIndexOf('.') + 1) == 'gltf')) {
+            defaultModel = true; // Ahora si se subio un archivo y al dar click a visualizador ya no abrira las pestañas
+            let file = modelo.files[0]; // Conseguimos el archivo del evento (Esto lee datos generales del archivo)
+            let reader = new FileReader();  // Se crea un nuevo Objeto de tipo FileReader (Esto lee el archivo)
+      
+            reader.readAsText(file); // Ahora se pasan los datos al Objeto FileReader para que lo lea y puedo acceder al contenido
+      
+            reader.onload = function() { // Sí cargo
+               modelViewer.src = URL.createObjectURL(file); // Convertir el archivo una URL que se pasara al src del modelViewer y así cambiara el modelo que muestra
+            };
+      
+            reader.onerror = function() { // Sí hubó un error
+               console.log(reader.error); // Imprime en consola el error
+            };
+         } else { // Sí el archivo no termina en .gbl o .gltf imprime en consola lo siguiente
+            console.log('Extensión invalida');
+         }
+      }   
+   </script>
 
 {% include 'admin/pie2.html' %}
 

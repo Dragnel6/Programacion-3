@@ -1,0 +1,351 @@
+{% include 'sitio/cabezera.html' %}
+  <link rel="stylesheet" href="{{url_for('static', filename='css/main.css') }}">
+  <script src="https://kit.fontawesome.com/a75248a9a3.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="static\css\contacto.css">
+ 
+<body>
+    <div class="contactUs">
+      <div class="title">
+        <h2>Calcular precio</h2>
+        
+      </div>
+      <div class="container-fluid">
+        <div class="contacto form">
+          <h3>Calcular precio de impresión</h3>
+          <form action="/calcular/nuevo" method="post" enctype="multipart/form-data">
+            <div class="formBox d-flex">
+                <div class="col-md-8 p-2">
+                    <div class="form-control form-control-sm">
+                        <label for="txtArchivo" class="form-label fw-bold">Seleccione el archivo</label>
+                        <input type="file" class="col-md-11 m-2 p-2 border border-secondary fs-5" name="txtArchivo" id="txtArchivo" aria-describedby="helpId" placeholder="Seleccione el archivo" accept=".glb,.glft" onchange="mostrarModelo(this)" {% if model == None %} required {% endif %}>
+                    </div>
+                    <div class="form-control form-control-sm relative">
+                        <model-viewer oncontextmenu="return false;" skybox-image="/default/dimensions.hdr" id="model" class="col-md-11 m-2" style="height: 400px;" alt="Seleccione un archivo .GLB" src="{% if model %} /modelos/{{ model[3]}} {% else %} /default/default.glb {% endif %}" shadow-intensity="1" shadow-softness="0" camera-controls></model-viewer>
+                    </div>
+                </div>
+                <div class="col-md-4" id="model-settings">
+                    <div class="form-control form-control-sm">
+                        <span class="fw-bold">Material y color</span>
+                        <select class="form-select p-2 border border-secondary fs-5 mb-2" aria-label="Seleccione el material" name="material" id="material" required>
+                            <option value="" selected>Seleccione el material</option>
+                            <option value="1">PLA</option>
+                            <option value="2">ABS / ASA</option>
+                            <option value="3">PETG</option>
+                            <option value="4">FLEXIBLE</option>
+                            <option value="5">RESINA DURA</option>
+                            <option value="6">NILON PA12</option>
+                        </select>
+                        <select class="form-select p-2 border border-secondary fs-5" aria-label="Seleccione el color" disabled name="color" id="color" required>
+                            <option value="" selected>Seleccione un material primero</option>
+                        </select>
+                    </div>
+                    <div class="form-control form-control-sm">
+                        <span class="fw-bold">Relleno interior</span>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="radio" name="relleno" value="1" class="radio-btn" id="relleno1" checked>
+                                <label for="relleno1" class="radio-txt">
+                                    <img src="/imgs/relleno-1.png" alt="" srcset="">
+                                    <span>20-30%</span>
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="radio" name="relleno" value="2" class="radio-btn" id="relleno2">
+                                <label for="relleno2" class="radio-txt">
+                                    <img src="/imgs/relleno-2.png" alt="" srcset="">
+                                    <span>50-60%</span>
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="radio" name="relleno" value="3" class="radio-btn" id="relleno3">
+                                <label for="relleno3" class="radio-txt">
+                                    <img src="/imgs/relleno-3.png" alt="" srcset="">
+                                    <span>90-100%</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-control form-control-sm">
+                            <span class="fw-bold">Acabado superficial</span>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input type="radio" name="calidad" value="1" class="radio-btn" id="calidad3" checked>
+                                    <label for="calidad3" class="radio-txt">
+                                        <img src="/imgs/calidad-3.png" alt="" srcset="">
+                                        <span>Rugoso</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="radio" name="calidad" value="2" class="radio-btn" id="calidad2">
+                                    <label for="calidad2" class="radio-txt">
+                                        <img src="/imgs/calidad-2.png" alt="" srcset="">
+                                        <span>Medio</span>
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="radio" name="calidad" value="3" class="radio-btn" id="calidad1">
+                                    <label for="calidad1" class="radio-txt">
+                                        <img src="/imgs/calidad-1.png" alt="" srcset="">
+                                        <span>Fino</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-control form-control-sm">
+                            <span class="fw-bold">Escala</span>
+                            <div class="row">
+                                <!-- La clase d-none oculta elements, la escala esta pero oculta -->
+                                <br class="d-none"><span id="min-scale-value">0.00 %</span><br>
+                                <input class="d-none" class="p-0" id="min-scale" type="range" min="0.00" max="1.00" step="0.01" value="0.5">
+                                <div class="col-md-12" id="escale">
+                                    <span class="col-md-12 text-muted fw-bold">Longitud, Alto y Ancho</span>
+                                    <div class="row">
+                                        <span class="col-md-3 text-center">X</span>
+                                        <span class="col-md-1 text-center text-muted fw-bold">x</span>
+                                        <span class="col-md-3 text-center">Y</span>
+                                        <span class="col-md-1 text-center text-muted fw-bold">x</span>
+                                        <span class="col-md-3 text-center">Z</span>
+                                    </div>
+                                    <div class="row">
+                                        <input type="number" id="x" class="col-md-3 p-0 m-0" min="0.187" max="46.925">
+                                        <span class="col-md-1 text-center text-muted fw-bold">x</span>
+                                        <input type="number" id="y" class="col-md-3 p-0 m-0" min="0.100" max="25.070">
+                                        <span class="col-md-1 text-center text-muted fw-bold">x</span>
+                                        <input type="number" id="z" class="col-md-3 p-0 m-0" min="0.199" max="49.999">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row100">
+                <span id="calculo" class="fs-2">0.00 $</span>
+                <div class="inputBox">
+                  <input class="btn btn-primary" type="submit" value="Solicitar impresion" style="max-width: fit-content;">
+                </div>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <h2 class="titulo">Nuestros Materiales disponibles</h2>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <img class="card-img-top" src="https://www.3dnatives.com/es/wp-content/uploads/sites/4/FDM_PLA.jpg" alt="Title">
+                <div class="card-body">
+                    <h2 class="card-title">PLA</h2>
+                    <h4>Material biodegradable con variedad de colores. Para prototipos rapidos.</h4>
+                </div>
+            </div>
+            <h2/>
+            <h2/>
+            <h2/>
+            <h2/>
+        </div>
+        <h2/>
+        <h2/>
+        <h2/>
+        <h2/>
+        <h2/>
+        <div class="col-md-3">
+            <div class="card">
+                <img class="card-img-top" src="https://i.all3dp.com/wp-content/uploads/2018/10/08112015/esun-petg-181008.jpg" alt="Title">
+                <div class="card-body">
+                    <h2 class="card-title">PETG</h2>
+                    <h4>Filamento reciclable  y aprobadpo por la FDA para uso alimentario</h4>
+                </div>
+            </div>
+        </div>
+       
+    </div>
+
+    <!-- Google Model Viewer -->
+   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+   <script>
+    const   modelViewer = document.querySelector('#model'),
+            newModel = document.querySelector('#txtArchivo'),
+            material = document.querySelector('#material'),
+            color = document.querySelector('#color'),
+            minScale = document.querySelector('#min-scale-value'),
+            scale = document.querySelector('#escale'),
+            txtX = document.querySelector('#x'),
+            txtY = document.querySelector('#y'),
+            txtZ = document.querySelector('#z'),
+            settings = document.querySelector('#model-settings'),
+            calculo = document.querySelector('#calculo');
+    let defaultModel = false,
+        options = {'x': 46.925, 'y': 25.070, 'z': 49.999},
+        colors = {
+            '1': {'texture' : [0.15, 0.34], 'txtColors': ['PLA - Gris', 'PLA - Amarillo', 'PLA - Negro', 'PLA - Blanco', 'PLA - Verde', 'PLA - Rojo', 'PLA - Naranja', 'PLA - Azul', 'PLA - Transparente', 'PLA - Rosa', 'PLA - Madera'], 'hexColor': ['#adadad', '#eeee22', '#000000', '#ffffff', '#81d742', '#dd3333', '#dd9933', '#28b7ff', '#efefef', '#e76ff2', '#c9902e']},
+            '2': {'texture' : [0.22, 0.22], 'txtColors': ['ABS - Blanco', 'ABS - Negro', 'ASA - Blanco', 'ASA - Negro'], 'hexColor': ['#ffffff', '#000000', '#ffffff', '#000000']},
+            '3': {'texture' : [0.15, 0.22], 'txtColors': ['PETG - Blanco', 'PETG - Negro', 'PETG - Rojo', 'PETG - Azul'], 'hexColor': ['#ffffff', '#000000', '#f73838', '#219cd1']},
+            '4': {'texture' : [0.25, 0.8], 'txtColors': ['Flexible - Negro', 'Flexible - Blanco'], 'hexColor': ['#000000', '#ffffff']},
+            '5': {'texture' : [0.25, 0.8], 'txtColors': ['Resina blanca', 'Resina flexible'], 'hexColor': ['#ffffff', '#5b5b5b']},
+            '6': {'texture' : [0, 0.9], 'txtColors': ['Nylon PA12 - Blanco', 'Nylon PA12 - Negro'], 'hexColor': ['#ffffff', '#000000']},
+        },
+        totalPrice = 0.00,
+        po;
+
+    function calcularPrecio() {
+        const   calidad = document.querySelector('[name="calidad"]:checked'),
+                relleno = document.querySelector('[name="relleno"]:checked'),
+                energia = 0.27,
+                pintura = 0.02,
+                filamento = 0.07,
+                dimension = (parseFloat(txtX.value) + parseFloat(txtY.value) + parseFloat(txtZ.value)),
+                rellenoPrecio = {'1': 0, '2': 1.3, '3': 1.6},
+                calidadPrecio = {'1': 0, '2': 1.2, '3': 1.4};
+        let total = (parseFloat(relleno.value) * rellenoPrecio[parseFloat(relleno.value)]) + (parseFloat(calidad.value) * calidadPrecio[parseFloat(calidad.value)]) + energia + pintura + filamento;
+        
+        totalPrice = (dimension * total).toFixed(2) ? (dimension * total).toFixed(2) : 8.00;
+        totalPrice = totalPrice < 8.00 ? 8.00 : totalPrice;
+        calculo.textContent = totalPrice + '$';
+    }
+
+    function mostrarModelo(modelo) {
+       
+        if (modelo.files[0] && (modelo.files[0].name.substring(modelo.files[0].name.lastIndexOf('.') + 1) == 'glb' || modelo.files[0].name.substring(modelo.files[0].name.lastIndexOf('.') + 1) == 'gltf')) {
+        defaultModel = true;
+        let file = modelo.files[0];
+        let reader = new FileReader(); 
+
+        reader.readAsText(file);
+
+        reader.onload = function() {
+            modelViewer.src = URL.createObjectURL(file);
+            if (modelViewer.loaded) {
+                let totalPercent,
+                    x = modelViewer.scale[0] / 100,
+                    y = modelViewer.scale[1] / 100,
+                    z = modelViewer.scale[2] / 100;
+
+                txtX.value = x >= 0.187 && x <= 46.925 ? x : x < 0.187 ? 0.187 : 46.925;
+                txtY.value = y >= 0.100 && y <= 25.070 ? y : y < 0.100 ? 0.100 : 25.070;
+                txtZ.value = z >= 0.199 && z <= 49.999 ? z : z < 0.199 ? 0.199 : 49.999;
+
+                totalPercent = ((parseFloat(txtX.value) + parseFloat(txtY.value) + parseFloat(txtZ.value)) * 100 / (options.x + options.y + options.z)).toFixed(2);
+                minScale.textContent = (totalPercent*100).toFixed(2) + '%';
+                minScale.value = 10.00;
+                calcularPrecio();
+            }
+        };
+
+        reader.onerror = function() {
+            console.log(reader.error);
+        };
+        } else {
+            console.log('Extensión invalida');
+        }
+    }
+
+    {% if model %}
+    defaultModel = true;
+    let loadFromID = async () => {
+        modelViewer.addEventListener('load', (e) => {
+            let totalPercent,
+                x = modelViewer.scale[0] * 0.02645833,
+                y = modelViewer.scale[1] * 0.02645833,
+                z = modelViewer.scale[2] * 0.02645833;
+
+            txtX.value = x >= 0.187 && x <= 46.925 ? x : x < 0.187 ? 0.187 : 46.925;
+            txtY.value = y >= 0.100 && y <= 25.070 ? y : y < 0.100 ? 0.100 : 25.070;
+            txtZ.value = z >= 0.199 && z <= 49.999 ? z : z < 0.199 ? 0.199 : 49.999;
+
+            totalPercent = ((parseFloat(txtX.value) + parseFloat(txtY.value) + parseFloat(txtZ.value)) * 100 / (options.x + options.y + options.z)).toFixed(2);
+            minScale.textContent = (totalPercent*0.02645833).toFixed(2) + '%';
+            minScale.value = 0.10;
+            calcularPrecio();
+        })
+    };
+    loadFromID();
+    {% endif %}
+
+    settings.addEventListener('click', (e) => {
+        if (!defaultModel) {
+            alert('Seleccione un modelo primero');
+        } else {
+            calcularPrecio();
+        }
+    })
+
+    material.addEventListener('change', (e) => {
+        let val = e.target.value;
+        pos = val;
+        if (val > 1 || val < 6) {
+            color.disabled = false;
+            color.innerHTML = '<option value="" selected>Seleccione el color</option>';
+            for (i = 0; i < colors[val].txtColors.length; i += 1) { //Recorrer el json, en la llave del valor que se ingreso `json[valor] == json['1']`, y su longitud
+                let option = document.createElement('option');
+                option.setAttribute('value', i + 1);
+                option.appendChild(document.createTextNode(colors[val].txtColors[i]));
+                color.appendChild(option);
+            }
+        } else {
+            color.disabled = true;
+            color.innerHTML = '<option value="" selected>Seleccione un material primero</option>';
+        }
+    });
+
+    color.addEventListener('change', (e) => {
+        const [material] = modelViewer.model.materials;
+        let val = e.target.value;
+        material.pbrMetallicRoughness.setMetallicFactor(colors[pos].texture[0]);
+        material.pbrMetallicRoughness.setRoughnessFactor(colors[pos].texture[1]);
+        material.pbrMetallicRoughness.setBaseColorFactor(colors[pos].hexColor[val - 1]);
+    });
+    
+    {% if model == Null %}
+    modelViewer.addEventListener('click', (e) => {
+        if (!defaultModel) {
+            newModel.click();
+        }
+    });
+    {% endif %}
+
+    document.querySelector('#min-scale').addEventListener('input', (e) => {
+        let percent = (e.target.value * 100).toFixed(2),
+            x, y, z;
+        minScale.textContent = percent + '%';
+        minScale.value = percent;
+
+        txtX.value = ((percent * options.x) / 100).toFixed(2);
+        txtY.value = ((percent * options.y) / 100).toFixed(2);
+        txtZ.value = ((percent * options.z) / 100).toFixed(2);
+
+        x = txtX.value * 37.795276;
+        y = txtY.value * 37.795276;
+        z = txtZ.value * 37.795276;
+        actualizarEscala(x, y, z);
+        actualizarFrame();
+    });
+
+    function actualizarFrame() {
+        modelViewer.updateFraming();
+    }
+
+    const actualizarEscala = (x,y,z) => {
+        modelViewer.scale = `${x} ${y} ${z}`;
+    };
+
+    scale.addEventListener('change', (e) => {
+        let target = e.target;
+        let percent = (parseFloat(target.value) * 100) / options[target.id];
+        let totalPercent = (parseFloat(txtX.value) + parseFloat(txtY.value) + parseFloat(txtZ.value)) * 100 / (options.x + options.y + options.z);
+        console.log('Total', totalPercent);
+        console.log(percent);
+        if (target.id !== 'x') {txtX.value = (percent * options.x) / 100}
+        if (target.id !== 'y') {txtY.value = (percent * options.y) / 100}
+        if (target.id !== 'z') {txtZ.value = (percent * options.z) / 100}
+        let x = txtX.value * 37.795276;
+        let y = txtY.value * 37.795276;
+        let z = txtZ.value * 37.795276;
+        actualizarEscala(x, y, z);
+        actualizarFrame();
+    });
+ </script>
+</body>
+
+
+{% include 'sitio/pie.html' %}

@@ -95,7 +95,17 @@ p {
   border-radius: 1rem;
 }
 
-
+.radio-btn {
+  display: none;
+}
+.radio-txt {
+  border: 1px transparent solid;
+  border-radius: 10px;
+  padding: 2px;
+}
+.radio-btn:checked ~ .radio-txt {
+  border: 1px solid black;
+}
 
 
 
